@@ -7,4 +7,5 @@ router.register("api/publisher", PublisherViewSet, "publisher")
 router.register("api/author", AuthorViewSet, "author")
 router.register("api/book", BookViewSet, "book")
 
+app_name = 'api'
 urlpatterns = router.urls

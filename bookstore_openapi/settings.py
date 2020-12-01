@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'book',
-    'drf_yasg'
+    'drf_yasg',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -54,8 +55,17 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-  'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_RENDERER_CLASSES': (
+        'utils.api.renderers.CamelCaseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'utils.api.parsers.CamelCaseJSONRenderer',
+    ),
 }
+
 
 ROOT_URLCONF = 'bookstore_openapi.urls'
 
