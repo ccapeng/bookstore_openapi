@@ -1,10 +1,11 @@
 # from rest_framework import viewsets, permissions
 from collections import OrderedDict
-#from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404
+from django.db import connection
 
 #from rest_framework import viewsets, status
 from rest_framework import viewsets
-from rest_framework.decorators import action
+#from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .serializers import \
@@ -37,4 +38,5 @@ class AuthorViewSet(viewsets.ModelViewSet):
 class BookViewSet(viewsets.ModelViewSet):
     """ Book ViewSet """
     serializer_class = BookSerializer
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().select_related("category", "publisher", "author")
+    print("api:", queryset.query)

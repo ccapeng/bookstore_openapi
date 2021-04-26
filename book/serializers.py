@@ -37,10 +37,9 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
-    publisher_name = serializers.CharField(source='publisher.name', read_only=True)
-    author_last_name = serializers.CharField(source='author.last_name', read_only=True)
-    author_first_name = serializers.CharField(source='author.first_name', read_only=True)
+    category = CategorySerializer(many=False, required=False)
+    publisher = PublisherSerializer(many=False, required=False)
+    author = AuthorSerializer(many=False, required=False)
 
     class Meta:
         model = Book
@@ -48,11 +47,6 @@ class BookSerializer(serializers.ModelSerializer):
             'id', 
             'title', 
             'category', 
-            'category_name', 
             'publisher', 
-            'publisher_name', 
-            'author', 
-            'author_last_name', 
-            'author_first_name'
+            'author'
         )
-
