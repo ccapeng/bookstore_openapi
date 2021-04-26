@@ -1,6 +1,5 @@
 from rest_framework import routers
 from django.urls import path
-#from .api import CategoryViewSet, PublisherViewSet, AuthorViewSet, BookViewSet
 
 from book.views.category_list import category_list
 from book.views.category_detail import category_detail
@@ -10,15 +9,6 @@ from book.views.author_list import author_list
 from book.views.author_detail import author_detail
 from book.views.book_list import book_list
 from book.views.book_detail import book_detail
-
-# router = routers.DefaultRouter()
-# router.register("api/categories", CategoryViewSet, "category")
-# router.register("api/publishers", PublisherViewSet, "publisher")
-# router.register("api/authors", AuthorViewSet, "author")
-# router.register("api/books", BookViewSet, "book")
-
-#app_name = 'api'
-# urlpatterns = router.urls
 
 urlpatterns = [ 
     path('api/categories', category_list),
