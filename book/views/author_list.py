@@ -1,12 +1,10 @@
-from django.shortcuts import render
-
-from django.http.response import JsonResponse
-from rest_framework.parsers import JSONParser 
 from rest_framework import status
- 
+from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser 
+from rest_framework.response import Response
+from any_case import converts_keys
 from book.models import Author
 from book.serializers import AuthorSerializer
-from rest_framework.decorators import api_view
 
 
 def get_author_list(request):
@@ -18,21 +16,23 @@ def get_author_list(request):
     if first_name is not None:
         authors = authors.filter(last_name__icontains=first_name)
     authors_serializer = AuthorSerializer(authors, many=True)
-    return JsonResponse(authors_serializer.data, safe=False)
+    return Response(authors_serializer.data)
 
     
 def create_author(request):
     author_data = JSONParser().parse(request)
+    # convert keys from camelCase to snake_case
+    author_data = converts_keys(author_data, case='snake')
     author_serializer = AuthorSerializer(data=author_data)
     if author_serializer.is_valid():
         author_serializer.save()
-        return JsonResponse(author_serializer.data, status=status.HTTP_201_CREATED) 
-    return JsonResponse(author_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(author_serializer.data, status=status.HTTP_201_CREATED) 
+    return Response(author_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
 def delete_author_list(request):
     count = Author.objects.all().delete()
-    return JsonResponse(
+    return Response(
         {'message': '{} authors were deleted successfully.'.format(count[0])}, 
         status=status.HTTP_204_NO_CONTENT
     )
@@ -40,7 +40,6 @@ def delete_author_list(request):
 
 @api_view(['GET', 'POST', 'DELETE'])
 def author_list(request):
-    print("request.method", request.method)
     if request.method == 'GET':
         return get_author_list(request)
     elif request.method == 'POST':

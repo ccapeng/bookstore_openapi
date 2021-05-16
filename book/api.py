@@ -21,7 +21,21 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """ Category ViewSet """
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    print("categoryViewSet api:", queryset.query)
 
+    def list(self, request):
+        queryset = Category.objects.all()
+        serializer = CategorySerializer(queryset, many=True)
+        print("category list:", serializer.data)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Category.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = CategorySerializer(user)
+        print("category retrieve:", serializer.data)
+        return Response(serializer.data)
+    # create, update, partial_update, destroy
 
 class PublisherViewSet(viewsets.ModelViewSet):
     """ Publisher ViewSet """

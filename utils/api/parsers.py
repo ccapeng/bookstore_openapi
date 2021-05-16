@@ -28,17 +28,20 @@ def underscoreize(data):
     return data
 
 
-class CamelCaseJSONRenderer(JSONParser):
+class SnakeCaseJSONRenderer(JSONParser):
     """
     https://gist.github.com/vbabiy/5842073
     """
 
     def parse(self, stream, media_type=None, parser_context=None):
+        print("parsing")
         parser_context = parser_context or {}
         encoding = parser_context.get('encoding', settings.DEFAULT_CHARSET)
-
         try:
             data = stream.read().decode(encoding)
-            return underscoreize(json.loads(data))
+            # return underscoreize(json.loads(data))
+            new_data = underscoreize(json.loads(data))
+            print("new_data:", new_data)
+            return new_data
         except Exception as e:
             raise ParseError('Error', str(e))

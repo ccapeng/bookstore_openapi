@@ -1,3 +1,4 @@
+from rest_framework.renderers import BrowsableAPIRenderer
 from rest_framework.renderers import JSONRenderer
 import re
 
@@ -24,6 +25,16 @@ class CamelCaseJSONRenderer(JSONRenderer):
     """
     https://gist.github.com/vbabiy/5842073
     """
-
     def render(self, data, *args, **kwargs):
         return super(CamelCaseJSONRenderer, self).render(camelize(data), *args, **kwargs)
+
+class CamelCaseBrowsableAPIRenderer(BrowsableAPIRenderer):
+    def render(self, data, *args, **kwargs):
+        return super(CamelCaseBrowsableAPIRenderer, self).render(
+            camelize(
+                data, 
+                **{"no_underscore_before_number": False, "ignore_fields": None}
+            ), 
+            *args, 
+            **kwargs
+        )

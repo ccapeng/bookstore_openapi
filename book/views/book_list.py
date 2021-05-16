@@ -1,12 +1,10 @@
-from django.shortcuts import render
-
-from django.http.response import JsonResponse
-from rest_framework.parsers import JSONParser 
 from rest_framework import status
- 
-from book.models import Book
-from book.serializers import BookDetailSerializer
 from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser 
+from rest_framework.response import Response
+from any_case import converts_keys
+from book.models import Book, Category, Publisher, Author
+from book.serializers import BookSerializer, BookDetailSerializer
 
 
 def get_book_list(request):
@@ -15,21 +13,38 @@ def get_book_list(request):
     if title is not None:
         books = books.filter(title__icontains=title)
     books_serializer = BookDetailSerializer(books, many=True)
-    return JsonResponse(books_serializer.data, safe=False)
+    return Response(books_serializer.data)
 
     
 def create_book(request):
-    book_data = JSONParser().parse(request)
-    book_serializer = BookSerializer(data=book_data)
-    if book_serializer.is_valid():
-        book_serializer.save()
-        return JsonResponse(book_serializer.data, status=status.HTTP_201_CREATED) 
-    return JsonResponse(book_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+    data = JSONParser().parse(request)
+    # convert keys from camelCase to snake_case
+    data = converts_keys(data, case='snake')
+    serializer = BookDetailSerializer(data=data)
+    if serializer.is_valid():
+        category, publisher, author = None, None, None
+        category_id = data.get("category_id", None)
+        publisher_id = data.get("publisher_id", None)
+        author_id = data.get("author_id", None)
+        if category_id:
+            category = Category.objects.get(pk=category_id) 
+        if publisher_id:
+            publisher = Publisher.objects.get(pk=publisher_id) 
+        if author_id:
+            author = Author.objects.get(pk=author_id) 
+        serializer.save(
+            category = category,
+            publisher =  publisher,
+            author =  author,
+        ) 
+        return Response(serializer.data, status=status.HTTP_201_CREATED) 
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
 def delete_book_list(request):
     count = Book.objects.all().delete()
-    return JsonResponse(
+    return Response(
         {'message': '{} books were deleted successfully.'.format(count[0])}, 
         status=status.HTTP_204_NO_CONTENT
     )
@@ -37,7 +52,6 @@ def delete_book_list(request):
 
 @api_view(['GET', 'POST', 'DELETE'])
 def book_list(request):
-    print("request.method", request.method)
     if request.method == 'GET':
         return get_book_list(request)
     elif request.method == 'POST':

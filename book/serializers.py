@@ -43,7 +43,7 @@ class BookSerializer(serializers.ModelSerializer):
         queryset=Category.objects.all()
     )
     publisher_id = serializers.PrimaryKeyRelatedField(
-        source='category',
+        source='publisher',
         queryset=Publisher.objects.all()
     )
     author_id = serializers.PrimaryKeyRelatedField(

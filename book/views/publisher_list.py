@@ -1,12 +1,10 @@
-from django.shortcuts import render
-
-from django.http.response import JsonResponse
-from rest_framework.parsers import JSONParser 
 from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser 
+from rest_framework.response import Response
  
 from book.models import Publisher
 from book.serializers import PublisherSerializer
-from rest_framework.decorators import api_view
 
 
 def get_publisher_list(request):
@@ -15,7 +13,7 @@ def get_publisher_list(request):
     if name is not None:
         publishers = publishers.filter(name__icontains=name)
     publishers_serializer = PublisherSerializer(publishers, many=True)
-    return JsonResponse(publishers_serializer.data, safe=False)
+    return Response(publishers_serializer.data)
 
     
 def create_publisher(request):
@@ -23,13 +21,13 @@ def create_publisher(request):
     publisher_serializer = PublisherSerializer(data=publisher_data)
     if publisher_serializer.is_valid():
         publisher_serializer.save()
-        return JsonResponse(publisher_serializer.data, status=status.HTTP_201_CREATED) 
-    return JsonResponse(publisher_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(publisher_serializer.data, status=status.HTTP_201_CREATED) 
+    return Response(publisher_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
 def delete_publisher_list(request):
     count = Publisher.objects.all().delete()
-    return JsonResponse(
+    return Response(
         {'message': '{} publishers were deleted successfully.'.format(count[0])}, 
         status=status.HTTP_204_NO_CONTENT
     )
@@ -37,7 +35,6 @@ def delete_publisher_list(request):
 
 @api_view(['GET', 'POST', 'DELETE'])
 def publisher_list(request):
-    print("request.method", request.method)
     if request.method == 'GET':
         return get_publisher_list(request)
     elif request.method == 'POST':

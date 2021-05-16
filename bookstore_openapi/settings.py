@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'book',
-    'drf_yasg',
-    'django_extensions',
+    'rest_framework_swagger',
+    # 'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -51,21 +51,62 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsapp.middleware.CorsMiddleware',
+    #'corsapp.middleware.CorsMiddleware', 
+    'corsheaders.middleware.CorsMiddleware', 
 ]
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+#     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+#     'DEFAULT_RENDERER_CLASSES': (
+#         'utils.api.renderers.CamelCaseJSONRenderer',
+#         'rest_framework.renderers.BrowsableAPIRenderer',
+#     ),
+#     'DEFAULT_PARSER_CLASSES': (
+#         'utils.api.parsers.CamelCaseJSONRenderer',
+#         'rest_framework.parsers.FormParser',
+#         'rest_framework.parsers.MultiPartParser'
+#     ),
+# }
+
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+
     'DEFAULT_RENDERER_CLASSES': (
         'utils.api.renderers.CamelCaseJSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
+
     'DEFAULT_PARSER_CLASSES': (
-        'utils.api.parsers.CamelCaseJSONRenderer',
+        'utils.api.parsers.SnakeCaseJSONRenderer',
     ),
+
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
 
+# REST_FRAMEWORK = {
+
+#     'DEFAULT_RENDERER_CLASSES': (
+#         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+#         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+#     ),
+
+#     'DEFAULT_PARSER_CLASSES': (
+#         'djangorestframework_camel_case.parser.CamelCaseFormParser',
+#         'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+#         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+#         'rest_framework.parsers.FormParser',
+#         'rest_framework.parsers.MultiPartParser'
+#     ),
+# }
+
+CORS_ORIGIN_ALLOW_ALL = True # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:3030',
+# ] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
+# CORS_ORIGIN_REGEX_WHITELIST = [
+#     'http://localhost:3030',
+# ]
 
 ROOT_URLCONF = 'bookstore_openapi.urls'
 
@@ -86,7 +127,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'bookstore_openapi.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
