@@ -26,6 +26,25 @@
 
 - The hard nut to crack:
   - API end point differences:
+    - End point issue in Router
+        ```
+        router = routers.DefaultRouter()
+        router.register("api/categories", CategoryViewSet, "category")
+        ...
+        In this kind url configuration, the end point is 
+        `https://127.0.0.1/api/categories/`
+        not
+        `https://127.0.0.1/api/categories`
+        The difference is at the end slash.  
+        In general REST APIs practice, I prefer no end slash for listing.  
+        In order to do that, `urlpatterns` is applied.
+        ```
+        urlpatterns = [ 
+            path('api/categories', category_list, name="category_list"),
+            path('api/categories/<int:id>', category_detail, name="category_detail"),
+            ...
+        ]
+        ```
 
   - JSON naming conversion between snake case and camel case 
     - Use `any-case` module for request parsing.
