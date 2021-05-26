@@ -46,6 +46,6 @@
         ]
         ```
 
-  - JSON naming conversion between snake case and camel case 
+  - Keys conversion between python vaiiable snake case and JSON key camel case.
     - Use `any-case` module for request parsing.
     - Use middleware `utils.api.renderers.CamelCaseJSONRenderer` to output camel case JSON.
