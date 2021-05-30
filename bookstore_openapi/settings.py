@@ -154,3 +154,47 @@ STATICFILES_DIRS = [
 # choose to use class based view or function based view
 API_VIEW = 'class'
 #API_VIEW = 'function'
+
+
+# Separate DB SQL log from django log
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'db_handler': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'db_format'
+        },
+        'log_handler': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'log_format'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['log_handler'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['db_handler'],
+            'propagate': False
+        },
+    },
+    'formatters': {
+        'db_format': {
+            'format': 'sql> %(message)s'
+        },
+        'log_format': {
+            'format': 'django> %(message)s'
+        }
+    }
+}
