@@ -8,7 +8,10 @@ from book.serializers import BookSerializer, BookDetailSerializer
 
 
 def get_book_list(request):
-    books = Book.objects.all()
+    books = Book.objects \
+        .select_related("category", "publisher", "author") \
+        .all() 
+    print(books.query)
     title = request.query_params.get('title', None)
     if title is not None:
         books = books.filter(title__icontains=title)
@@ -20,7 +23,7 @@ def create_book(request):
     data = JSONParser().parse(request)
     # convert keys from camelCase to snake_case
     data = converts_keys(data, case='snake')
-    serializer = BookDetailSerializer(data=data)
+    serializer = BookSerializer(data=data)
     if serializer.is_valid():
         category, publisher, author = None, None, None
         category_id = data.get("category_id", None)

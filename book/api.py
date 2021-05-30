@@ -1,56 +1,96 @@
-# from rest_framework import viewsets, permissions
-from collections import OrderedDict
-from django.shortcuts import get_object_or_404
+from rest_framework import generics
+from rest_framework import mixins
 from django.db import connection
 
-#from rest_framework import viewsets, status
-from rest_framework import viewsets
-#from rest_framework.decorators import action
-from rest_framework.response import Response
-
-from .serializers import \
+from book.serializers import \
     CategorySerializer, \
     PublisherSerializer, \
     AuthorSerializer, \
+    BookDetailSerializer, \
     BookSerializer
-from .models import Category, Publisher, Author, Book
-# from django.core.exceptions import PermissionDenied
+from book.models import Category, Publisher, Author, Book
 
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    """ Category ViewSet """
-    serializer_class = CategorySerializer
+class CategoryList(generics.ListCreateAPIView):
+    """
+    List all categories, or create a new category.
+    """
     queryset = Category.objects.all()
-    print("categoryViewSet api:", queryset.query)
+    serializer_class = CategorySerializer
 
-    def list(self, request):
-        queryset = Category.objects.all()
-        serializer = CategorySerializer(queryset, many=True)
-        print("category list:", serializer.data)
-        return Response(serializer.data)
 
-    def retrieve(self, request, pk=None):
-        queryset = Category.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = CategorySerializer(user)
-        print("category retrieve:", serializer.data)
-        return Response(serializer.data)
-    # create, update, partial_update, destroy
+class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a category instance.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
-class PublisherViewSet(viewsets.ModelViewSet):
-    """ Publisher ViewSet """
-    serializer_class = PublisherSerializer
+
+class PublisherList(generics.ListCreateAPIView):
+    """
+    List all publisers, or create a new publisher.
+    """
     queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer
 
 
-class AuthorViewSet(viewsets.ModelViewSet):
-    """ Author ViewSet """
-    serializer_class = AuthorSerializer
+class PublisherDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a category instance.
+    """
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer      
+
+
+class AuthorList(generics.ListCreateAPIView):
+    """
+    List all authors, or create a new author.
+    """
     queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
 
 
-class BookViewSet(viewsets.ModelViewSet):
-    """ Book ViewSet """
+class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a category instance.
+    """
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer      
+
+
+# class BookList(generics.ListCreateAPIView):
+#     """
+#     List all authors, or create a new book.
+#     """
+#     queryset = Book.objects \
+#        .select_related("category","publisher","author") \
+#        .all() 
+#     serializer_class = BookDetailSerializer
+
+
+class BookList( 
+        mixins.ListModelMixin,
+        mixins.CreateModelMixin,
+        generics.GenericAPIView):
+
+    queryset = Book.objects \
+        .select_related("category","publisher","author") \
+        .all() 
+    serializer_class = BookDetailSerializer
+
+    def get(self, request, *args, **kwargs):
+        results = self.list(request, *args, **kwargs)
+        # check sql in here. Make sure table join is happening.
+        print(*connection.queries, sep="\n")
+        return results
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class BookDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a book instance.
+    """
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
-    queryset = Book.objects.all().select_related("category", "publisher", "author")
-    print("api:", queryset.query)

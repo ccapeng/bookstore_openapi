@@ -34,14 +34,10 @@ class SnakeCaseJSONRenderer(JSONParser):
     """
 
     def parse(self, stream, media_type=None, parser_context=None):
-        print("parsing")
         parser_context = parser_context or {}
         encoding = parser_context.get('encoding', settings.DEFAULT_CHARSET)
         try:
             data = stream.read().decode(encoding)
-            # return underscoreize(json.loads(data))
-            new_data = underscoreize(json.loads(data))
-            print("new_data:", new_data)
-            return new_data
+            return underscoreize(json.loads(data))
         except Exception as e:
             raise ParseError('Error', str(e))

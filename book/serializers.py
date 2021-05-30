@@ -37,7 +37,9 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-
+    # category = CategorySerializer(many=False, required=False)
+    # publisher = PublisherSerializer(many=False, required=False)
+    # author = AuthorSerializer(many=False, required=False)
     category_id = serializers.PrimaryKeyRelatedField(
         source='category',
         queryset=Category.objects.all()
@@ -58,8 +60,12 @@ class BookSerializer(serializers.ModelSerializer):
             'title', 
             'category_id', 
             'publisher_id', 
-            'author_id'
+            'author_id',
+            # 'category', 
+            # 'publisher', 
+            # 'author'
         )
+        #depth = 1
 
 class BookDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False, required=False)

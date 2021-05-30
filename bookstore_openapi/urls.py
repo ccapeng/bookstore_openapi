@@ -41,17 +41,6 @@ schema_view = get_swagger_view(title='Bookstore API')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    # url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    # url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    # path('', include("book.urls", namespace="api")),
-    # path('', include("book.urls")),
     url(r'^', include('book.urls')),
-    #path('api/', include('book.urls')),
-    # path('openapi', openapi_view(
-    #     title="Bookstore",
-    #     description="Bookstore REST API",
-    #     version="0.1"
-    # ), name='openapi-schema'),
     path('docs/',schema_view),
 ]

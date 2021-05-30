@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'book',
     'rest_framework_swagger',
-    # 'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -55,19 +54,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', 
 ]
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-#     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'utils.api.renderers.CamelCaseJSONRenderer',
-#         'rest_framework.renderers.BrowsableAPIRenderer',
-#     ),
-#     'DEFAULT_PARSER_CLASSES': (
-#         'utils.api.parsers.CamelCaseJSONRenderer',
-#         'rest_framework.parsers.FormParser',
-#         'rest_framework.parsers.MultiPartParser'
-#     ),
-# }
 
 REST_FRAMEWORK = {
 
@@ -82,22 +68,6 @@ REST_FRAMEWORK = {
 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
 }
-
-# REST_FRAMEWORK = {
-
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
-#         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
-#     ),
-
-#     'DEFAULT_PARSER_CLASSES': (
-#         'djangorestframework_camel_case.parser.CamelCaseFormParser',
-#         'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
-#         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
-#         'rest_framework.parsers.FormParser',
-#         'rest_framework.parsers.MultiPartParser'
-#     ),
-# }
 
 CORS_ORIGIN_ALLOW_ALL = True # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
 CORS_ALLOW_CREDENTIALS = True
@@ -179,3 +149,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static'),
 ]
+
+# For api end point view, 
+# choose to use class based view or function based view
+API_VIEW = 'class'
+#API_VIEW = 'function'

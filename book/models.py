@@ -29,10 +29,23 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     category = models.ForeignKey(
-        Category, null=True, on_delete=models.SET_NULL)
+        Category, 
+        null=True, 
+        on_delete=models.SET_NULL,
+        related_name="category"
+    )
     publisher = models.ForeignKey(
-        Publisher, null=True, on_delete=models.SET_NULL)
-    author = models.ForeignKey(Author, null=True, on_delete=models.SET_NULL)
+        Publisher, 
+        null=True, 
+        on_delete=models.SET_NULL,
+        related_name="publisher"
+    )
+    author = models.ForeignKey(
+        Author, 
+        null=True, 
+        on_delete=models.SET_NULL,
+        related_name="author"
+    )
 
     def __str__(self):
         return self.title
