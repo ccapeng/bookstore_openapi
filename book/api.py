@@ -5,57 +5,181 @@ from book.serializers import \
     CategorySerializer, \
     PublisherSerializer, \
     AuthorSerializer, \
-    BookDetailSerializer, \
+    BookListDetailSerializer, \
     BookSerializer
 from book.models import Category, Publisher, Author, Book
 
-class CategoryList(generics.ListCreateAPIView):
-    """
-    List all categories, or create a new category.
-    """
+# For more correct documentation, 
+# use mixin class instead of generic class.
+
+# class CategoryList(generics.ListCreateAPIView):
+#     """
+#     List all categories, or create a new category.
+#     """
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+class CategoryList(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        List all categories.
+        """
+        return self.list(request, *args, **kwargs)
 
-class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a category instance.
-    """
+    def post(self, request, *args, **kwargs):
+        """
+        Create a new category.
+        """
+        return self.create(request, *args, **kwargs)
+
+# class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+#     """
+#     Retrieve, update or delete a category instance.
+#     """
+#     queryset = Category.objects.all()
+#     serializer_class = CategorySerializer
+class CategoryDetail(mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    generics.GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        Get a category instance.
+        """
+        return self.retrieve(request, *args, **kwargs)
 
-class PublisherList(generics.ListCreateAPIView):
-    """
-    List all publisers, or create a new publisher.
-    """
+    def put(self, request, *args, **kwargs):
+        """
+        Update a category.
+        """
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Delete a category.
+        """
+        return self.destroy(request, *args, **kwargs)
+
+
+# class PublisherList(generics.ListCreateAPIView):
+#     """
+#     List all publisers, or create a new publisher.
+#     """
+#     queryset = Publisher.objects.all()
+#     serializer_class = PublisherSerializer
+class PublisherList(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
     queryset = Publisher.objects.all()
     serializer_class = PublisherSerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        List all publishers.
+        """
+        return self.list(request, *args, **kwargs)
 
-class PublisherDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a category instance.
-    """
+    def post(self, request, *args, **kwargs):
+        """
+        Create a new publisher.
+        """
+        return self.create(request, *args, **kwargs)
+
+
+# class PublisherDetail(generics.RetrieveUpdateDestroyAPIView):
+#     """
+#     Retrieve, update or delete a category instance.
+#     """
+#     queryset = Publisher.objects.all()
+#     serializer_class = PublisherSerializer      
+class PublisherDetail(mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    generics.GenericAPIView):
     queryset = Publisher.objects.all()
-    serializer_class = PublisherSerializer      
+    serializer_class = PublisherSerializer
+
+    def get(self, request, *args, **kwargs):
+        """
+        Get a publisher instance.
+        """
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """
+        Update a publisher.
+        """
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Delete a publisher.
+        """
+        return self.destroy(request, *args, **kwargs)
 
 
-class AuthorList(generics.ListCreateAPIView):
-    """
-    List all authors, or create a new author.
-    """
+# class AuthorList(generics.ListCreateAPIView):
+#     """
+#     List all authors, or create a new author.
+#     """
+#     queryset = Author.objects.all()
+#     serializer_class = AuthorSerializer
+class AuthorList(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        List all authors.
+        """
+        return self.list(request, *args, **kwargs)
 
-class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a category instance.
-    """
+    def post(self, request, *args, **kwargs):
+        """
+        Create a new author.
+        """
+        return self.create(request, *args, **kwargs)
+
+
+# class AuthorDetail(generics.RetrieveUpdateDestroyAPIView):
+#     """
+#     Retrieve, update or delete a category instance.
+#     """
+#     queryset = Author.objects.all()
+#     serializer_class = AuthorSerializer      
+class AuthorDetail(mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    generics.GenericAPIView):
     queryset = Author.objects.all()
-    serializer_class = AuthorSerializer      
+    serializer_class = AuthorSerializer
 
+    def get(self, request, *args, **kwargs):
+        """
+        Get an author instance.
+        """
+        return self.retrieve(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        """
+        Update an author.
+        """
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """
+        Delete an author.
+        """
+        return self.destroy(request, *args, **kwargs)
 
 # class BookList(generics.ListCreateAPIView):
 #     """
@@ -75,10 +199,11 @@ class BookList(
         mixins.CreateModelMixin,
         generics.GenericAPIView):
 
-    queryset = Book.objects \
-        .select_related("category","publisher","author") \
-        .all() 
-    serializer_class = BookDetailSerializer
+    # queryset = Book.objects \
+    #     .select_related("category","publisher","author") \
+    #     .all() 
+    queryset = Book.objects.get_list_detail()
+    serializer_class = BookListDetailSerializer
 
     def get(self, request, *args, **kwargs):
         """
@@ -96,13 +221,6 @@ class BookList(
         return self.create(request, *args, **kwargs)
 
 
-# class BookDetail(generics.RetrieveUpdateDestroyAPIView):
-#     """
-#     Retrieve, update or delete a book instance.
-#     """
-#     queryset = Book.objects.all()
-#     serializer_class = BookSerializer
-
 class BookDetail(mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,
                     mixins.DestroyModelMixin,
@@ -118,7 +236,7 @@ class BookDetail(mixins.RetrieveModelMixin,
 
     def put(self, request, *args, **kwargs):
         """
-        update a book.
+        Update a book.
         """
         return self.update(request, *args, **kwargs)
 

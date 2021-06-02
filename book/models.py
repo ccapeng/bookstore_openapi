@@ -4,26 +4,33 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=32, unique=True)
 
-    def __str__(self):
-        return self.name
+    def __repr__(self):
+        return f"<Category {self.name}>"
 
 
 class Publisher(models.Model):
     name = models.CharField(max_length=32, unique=True)
-    def __str__(self):
-        return self.name
+    def __repr__(self):
+        return f"<Publisher {self.name}>"
 
 
 class Author(models.Model):
     last_name = models.CharField(max_length=32)
     first_name = models.CharField(max_length=32)
 
-    def __str__(self):
-        return self.last_name + " " + self.first_name
+    def __repr__(self):
+        return f"<Author {self.last_name} {self.first_name}>"
 
     @property
     def name(self):
         return self.last_name + " " + self.first_name
+
+
+class BookManager(models.Manager):
+
+    def get_list_detail(self):
+        qs = super().get_queryset()
+        return qs.select_related('category', 'publisher', 'author')
 
 
 class Book(models.Model):
@@ -47,5 +54,7 @@ class Book(models.Model):
         related_name="author"
     )
 
-    def __str__(self):
-        return self.title
+    objects = BookManager()
+
+    def __repr__(self):
+        return f"<Book {self.title}>"

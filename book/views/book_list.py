@@ -4,18 +4,18 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from any_case import converts_keys
 from book.models import Book, Category, Publisher, Author
-from book.serializers import BookSerializer, BookDetailSerializer
+from book.serializers import BookSerializer, BookListDetailSerializer
 
 
 def get_book_list(request):
-    books = Book.objects \
-        .select_related("category", "publisher", "author") \
-        .all() 
-    print(books.query)
+    # books = Book.objects \
+    #     .select_related("category", "publisher", "author") \
+    #     .all() 
+    books = Book.objects.get_list_detail()
     title = request.query_params.get('title', None)
     if title is not None:
         books = books.filter(title__icontains=title)
-    books_serializer = BookDetailSerializer(books, many=True)
+    books_serializer = BookListDetailSerializer(books, many=True)
     return Response(books_serializer.data)
 
     

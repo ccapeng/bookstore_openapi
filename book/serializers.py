@@ -67,7 +67,7 @@ class BookSerializer(serializers.ModelSerializer):
         )
         #depth = 1
 
-class BookDetailSerializer(serializers.ModelSerializer):
+class BookListDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(many=False, required=False)
     publisher = PublisherSerializer(many=False, required=False)
     author = AuthorSerializer(many=False, required=False)

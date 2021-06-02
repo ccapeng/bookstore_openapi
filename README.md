@@ -25,7 +25,12 @@
   - Enter http://127.0.0.1:8001/docs
 
 - Tech Details:
-  - API end points differences:
+  - API end points differences:  
+    To toggle FBV/CBV, please update in the `seetings.py`
+    ```
+    API_VIEW = 'class'
+    #API_VIEW = 'function'
+    ```
     - Function based view:
         ```
         from rest_framework import routers
